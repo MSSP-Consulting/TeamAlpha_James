@@ -6,23 +6,24 @@ install_github("vqv/ggbiplot")
 ```
 
 
-```{r}
-tka<- read_xlsx("TKAsheet.xlsx")
-variable.names(tka)
-tka_tidy <- dplyr::select(tka,c(3,9,10,14,17,20,23))
-# chart.Correlation(tka_tidy, histogram=TRUE, pch=19)
+
+
+```{r warning=FALSE}
+TKA_data <- read_xlsx("TKAsheet.xlsx")
+
+TKA_data$V3X_Contal_KL <- as.numeric(TKA_data$V3X_Contal_KL)
+TKA_data_1 <- TKA_data %>% drop_na()
+colnames(TKA_data_1)
+TKA_data <- TKA_data_1[, c(3, 4,5,17,10,7,9)]
+
+# chart.Correlation(TKA_data[,9:17], histogram=TRUE, pch=20)
 ```
 
 
 ```{r}
-model <- glm(had_tkr_contra ~ DIF_STEPTIME_SEC_TKRminContra + DIF_STEPLENGTH_CM_TKRminContra +  DIF_CYCLETIME_SEC_TKRminContra + DIF_STRIDE_LENGTH_TKRmin_Contra, data = tka)
-summary(model)
-```
-
-```{r}
-variable.names(tka_tidy)
-tka_pca <- prcomp(tka_tidy, center = TRUE,scale. = TRUE)
-ggbiplot::ggbiplot(tka_pca,ellipse=TRUE,obs.scale = .5, var.scale = 1, labels=rownames(tka_pca), groups=tka_tidy$had_tkr_contra)
+variable.names(TKA_data)
+tka_pca <- prcomp(TKA_data, center = TRUE,scale. = TRUE)
+ggbiplot::ggbiplot(tka_pca,ellipse=TRUE,obs.scale = .5, var.scale = 1, labels=rownames(tka_pca), groups=TKA_data$had_tkr_contra)
 ```
 
 
