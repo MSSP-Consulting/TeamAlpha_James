@@ -1,1 +1,3 @@
 # TeamAlpha_James
+
+This project is deliveried by Team Alpha, the collaborators are Jing Xu, Lintong Li, Yeyang Han and Yin Xu. We are working on studying the occurrence of a second knee surgery due to osteoarthritis, for subjects who received knee surgery on their first knee at least 5 years ago. The purpose of this study design is to test the hypothesis that patients’ walking behaviors measured 5 years after their first knee surgery is predictive of their need for a second knee surgery.
