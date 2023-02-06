@@ -1,0 +1,32 @@
+---
+title: "TKA"
+author: "Group Alpha"
+date: "2022-12-12"
+output:
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r warning=FALSE}
+TKA_data <- read_xlsx("TKAsheet.xlsx")
+TKA_data$V3X_Contal_KL <- as.numeric(TKA_data$V3X_Contal_KL)
+TKA_data <- TKA_data %>% drop_na()
+TKA_data <- TKA_data[, c(3:10,14,17,20,23,29,35,41,47,53)]
+
+chart.Correlation(TKA_data[,9:17], histogram=TRUE, pch=20)
+```
+
+```{r}
+model1 <- glm(had_tkr_contra ~ AGE + SEX + V3BMI*VELOCITY + DIF_STEPLENGTH_CM_TKRminContra + DIF_SINGLE_SUPP_P_CYCLE, data = TKA_data)
+summary(model1)
+```
+
+```{r}
+model <- glm(had_tkr_contra ~ AGE + SEX + VELOCITY + V3BMI + DIF_STEPLENGTH_CM_TKRminContra, data = TKA_data)
+summary(model)
+```
+
+
