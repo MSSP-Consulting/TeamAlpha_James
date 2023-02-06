@@ -14,11 +14,15 @@ TKA_data <- read_xlsx("TKAsheet.xlsx")
 TKA_data$V3X_Contal_KL <- as.numeric(TKA_data$V3X_Contal_KL)
 TKA_data_1 <- TKA_data %>% drop_na()
 colnames(TKA_data_1)
-TKA_data <- TKA_data_1[, c(3, 4,5,17,10,7,9)]
-
-# chart.Correlation(TKA_data[,9:17], histogram=TRUE, pch=20)
+# TKA_data <- TKA_data_1[, c(3, 4,5,17,10,7,9)]
+TKA_data <- TKA_data_1[, c(3,17,11,10,32,26)]
+chart.Correlation(TKA_data[,2:6], histogram=TRUE, pch=20)
 ```
 
+```{r}
+fit_1<- glm(had_tkr_contra ~ DIF_STEPLENGTH_CM_TKRminContra + CADENCE + VELOCITY + DIF_SWING_TIME_SEC + AVG_HH_BASE_SUPP_CM, family = "binomial", data = TKA_data)
+summary(fit_1)
+```
 
 ```{r}
 variable.names(TKA_data)
