@@ -1,6 +1,6 @@
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-pacman::p_load("knitr","ggplot2","rstanarm","dplyr","tidyverse","PerformanceAnalytics", "grid","gridExtra","readxl","ggbiplot","devtools")
+pacman::p_load("knitr","ggplot2","rstanarm","dplyr","tidyverse","PerformanceAnalytics", "grid","gridExtra","readxl","ggbiplot","devtools","caret","leaps","MASS")
 install_github("vqv/ggbiplot")
 
 ```
@@ -16,7 +16,7 @@ TKA_data_1 <- TKA_data %>% drop_na()
 colnames(TKA_data_1)
 # TKA_data <- TKA_data_1[, c(3, 4,5,17,10,7,9)]
 # TKA_data <- TKA_data_1[, c(3,17,11,10,32,26)]
-TKA_data <- TKA_data_1[, c(3,17,11,10,32,26,4,5,10,7,9)]
+TKA_data <- TKA_data_1[, c(3,17,11,10,32,26,4,5,7,9)]
 chart.Correlation(TKA_data[,2:6], histogram=TRUE, pch=20)
 ```
 
@@ -27,7 +27,7 @@ selected_list <- variable_list[1]
 # fit_test <- glm(had_tkr_contra ~ ., family = 'binomial', data = TKA_data)
 # test_score<- AIC(fit_test)
 score <- 999
-for (i in 2:11){
+for (i in 2:length(variable_list)){
   option_list<- append(selected_list,variable_list[i])
   data_loop <- TKA_data[,option_list]
  fit_test <- glm(had_tkr_contra ~ ., family = 'binomial', data = data_loop)
@@ -41,6 +41,30 @@ for (i in 2:11){
 # fit_1
 ```
 
+# bakcward selection
+```{r}
+full.model <- glm(had_tkr_contra ~ ., family = 'binomial', data = TKA_data)
+step.model <- stepAIC(full.model, direction = "both", 
+                      trace = FALSE)
+summary(step.model)
+models <- regsubsets(had_tkr_contra~., data = TKA_data, nvmax = 5,
+                     method = "backward")
+summary(models)
+
+
+set.seed(100)
+# Set up repeated k-fold cross-validation
+train.control <- trainControl(method = "cv", number = 10)
+# Train the model
+step.model <- train(as.numeric(had_tkr_contra) ~., data = TKA_data,
+                    method = "leapBackward", 
+                    tuneGrid = data.frame(nvmax = 1:5),
+                    trControl = train.control
+                    )
+step.model$results
+summary(step.model$finalModel)
+coef(step.model$finalModel, 4)
+```
 
 
 
