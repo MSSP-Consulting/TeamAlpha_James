@@ -15,13 +15,38 @@ TKA_data$V3X_Contal_KL <- as.numeric(TKA_data$V3X_Contal_KL)
 TKA_data_1 <- TKA_data %>% drop_na()
 colnames(TKA_data_1)
 # TKA_data <- TKA_data_1[, c(3, 4,5,17,10,7,9)]
-TKA_data <- TKA_data_1[, c(3,17,11,10,32,26)]
+# TKA_data <- TKA_data_1[, c(3,17,11,10,32,26)]
+TKA_data <- TKA_data_1[, c(3,17,11,10,32,26,4,5,17,10,7,9)]
 chart.Correlation(TKA_data[,2:6], histogram=TRUE, pch=20)
 ```
 
+# variable selection
+```{r}
+variable_list <- colnames(TKA_data)
+selected_list <- variable_list[1]
+# fit_test <- glm(had_tkr_contra ~ ., family = 'binomial', data = TKA_data)
+# test_score<- AIC(fit_test)
+score <- 999
+for (i in 2:12){
+  option_list<- append(selected_list,variable_list[i])
+  data_loop <- TKA_data[,selected]
+ fit_test <- glm(had_tkr_contra ~ ., family = 'binomial', data = data_loop)
+ test_score<- AIC(fit_test)
+ if (test_score<score)
+   selected_list <- option_list
+    score <- test_score
+  
+}
+# fit_1<- glm(had_tkr_contra ~ ., family = "binomial", data = TKA_data)
+# fit_1
+```
+
+
+
 ```{r}
 fit_1<- glm(had_tkr_contra ~ DIF_STEPLENGTH_CM_TKRminContra + CADENCE + VELOCITY + DIF_SWING_TIME_SEC + AVG_HH_BASE_SUPP_CM, family = "binomial", data = TKA_data)
-summary(fit_1)
+# summary(fit_1)
+BIC(fit_1)
 ```
 
 ```{r}
