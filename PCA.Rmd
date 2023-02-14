@@ -17,7 +17,7 @@ colnames(TKA_data_1)
 # TKA_data <- TKA_data_1[, c(3, 4,5,17,10,7,9)]
 # TKA_data <- TKA_data_1[, c(3,17,11,10,32,26)]
 TKA_data <- TKA_data_1[, c(3,17,11,10,32,26,4,5,7,9,6)]
-chart.Correlation(TKA_data[,2:6], histogram=TRUE, pch=20)
+chart.Correlation(TKA_data[,2:10], histogram=TRUE, pch=20)
 ```
 
 # variable selection with AIC
@@ -86,7 +86,7 @@ summary(fit_1)
 
 ```{r}
 variable.names(TKA_data)
-tka_pca <- prcomp(TKA_data, center = TRUE,scale. = TRUE)
+tka_pca <- prcomp(TKA_data[,c(1,2,7,8,11)], center = TRUE,scale. = TRUE)
 ggbiplot::ggbiplot(tka_pca,ellipse=TRUE,obs.scale = .5, var.scale = 1, labels=rownames(tka_pca), groups=TKA_data$had_tkr_contra)
 ```
 
