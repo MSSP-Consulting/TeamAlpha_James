@@ -1,6 +1,6 @@
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
-pacman::p_load("knitr","ggplot2","rstanarm","dplyr","tidyverse","PerformanceAnalytics", "grid","gridExtra","readxl","ggbiplot","devtools","caret","leaps","MASS")
+pacman::p_load("knitr","ggplot2","rstanarm","dplyr","tidyverse","PerformanceAnalytics", "grid","gridExtra","readxl","ggbiplot","devtools","caret","leaps","MASS","arm")
 install_github("vqv/ggbiplot")
 
 ```
@@ -82,11 +82,60 @@ BIC(credit_glm_back)
 # fit_1<- glm(had_tkr_contra ~ DIF_STEPLENGTH_CM_TKRminContra + CADENCE + VELOCITY + DIF_SWING_TIME_SEC + AVG_HH_BASE_SUPP_CM + SEX + V3BMI + AGE, family = "binomial", data = TKA_data)
 fit_1<- glm(had_tkr_contra ~ DIF_STEPLENGTH_CM_TKRminContra + V3X_Contal_KL + SEX + V3BMI + AGE, family = "binomial", data = TKA_data)
 summary(fit_1)
+
+fit_2<- glm(had_tkr_contra ~ DIF_STEPLENGTH_CM_TKRminContra + V3X_Contal_KL + SEX + V3BMI + AGE, family = "quasibinomial", data = TKA_data)
+summary(fit_2)
+
+
+# res_res <- binnedplot(fitted(fit_1), 
+#            residuals(fit_1, type = "response"), 
+#            nclass = NULL, 
+#            xlab = "Expected Values", 
+#            ylab = "Average residual", 
+#            main = "Binned residual plot", 
+#            cex.pts = 0.8, 
+#            col.pts = 1, 
+#            col.int = "gray")
+
+# binnedplot(fitted(fit_1),
+#            residuals(fit_1, type = "deviance"),
+#            nclass = NULL,
+#            xlab = "Expected Values",
+#            ylab = "Average residual",
+#            main = "Binned residual plot",
+#            cex.pts = 0.8,
+#            col.pts = 1,
+#            col.int = "gray")
+
+binnedplot(fitted(fit_2), 
+           residuals(fit_2, type = "deviance"), 
+           nclass = NULL, 
+           xlab = "Expected Values", 
+           ylab = "Average residual", 
+           main = "Binned residual plot", 
+           cex.pts = 0.8, 
+           col.pts = 1, 
+           col.int = "gray")
+# res_pea <- binnedplot(fitted(fit_1), 
+#            residuals(fit_1, type = "pearson"), 
+#            nclass = 10, 
+#            xlab = "Expected Values", 
+#            ylab = "Average residual", 
+#            main = "Binned residual plot", 
+#            cex.pts = 0.8, 
+#            col.pts = 1, 
+#            col.int = "gray")
+
+# residuals(fit_1, type = c("deviance", "pearson", "working","response", "partial")) 
+
+# godofit(residuals(fit_1, type = "deviance"))
+
 ```
 
 ```{r}
 variable.names(TKA_data)
-tka_pca <- prcomp(TKA_data[,c(1,2,7,8,11)], center = TRUE,scale. = TRUE)
+# tka_pca <- prcomp(TKA_data[,c(9,2,7,8,11)], center = TRUE,scale. = TRUE)
+tka_pca <- prcomp(TKA_data[,-1], center = TRUE,scale. = TRUE)
 ggbiplot::ggbiplot(tka_pca,ellipse=TRUE,obs.scale = .5, var.scale = 1, labels=rownames(tka_pca), groups=TKA_data$had_tkr_contra)
 ```
 
